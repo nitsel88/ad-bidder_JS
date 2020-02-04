@@ -1,13 +1,11 @@
 function getSelectedBidder(bidsObj) {
+       
+        selectedbidsObj = bidsObj.seatbid.reduce((max, current) => current.bid[0].price >= max.bid[0].price ? current : max)
 
-    return new Promise ((resolve, reject)=> {
-          
-        selectedbidsObj = bidsObj.seatbid.reduce((max, current) => current.price >= max.price ? current : max, {price: 0})
+        return selectedbidsObj;
 
-        resolve (selectedbidsObj);
-    })
 
 }
 
 
-module.exports = getSelectedBidder;
+module.exports ={getSelectedBidder};

@@ -6,7 +6,7 @@ function parseBid() {
         fs.readFile(config.BIDJSON, (err, fileString) => {
      
              if (err) {
-                 throw "Error parsing bid-response.json"
+                 reject ("Error parsing file" + config.BIDJSON)
              }
 
              resolve(JSON.parse(fileString));
@@ -15,6 +15,5 @@ function parseBid() {
 }
 
 
-
-module.exports = parseBid;
+module.exports = {parseBid};
 

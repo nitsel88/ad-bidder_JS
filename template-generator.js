@@ -1,62 +1,46 @@
 //Module with logic to generate html based on the markup string passed
 
-const cheerio = require('cheerio');
-const fs = require('fs');
-const config = require('./config');
+const cheerio = require('cheerio')
+const fs = require('fs')
+const config = require('./config')
 
 class TemplateGenerator {
 
     constructor(markup) {
-      this.markup = markup;
-      this.formatMarkup();
+      this.markup = markup
+      this.formatMarkup()
     }
 
    //function to format the markup
-    formatMarkup1() {
+    formatMarkup() {
+       this.finalMarkup  = this.markup.replace(/\\n/g,"\\r")
+     }
 
-        const slash = `\u{5c}`;
-        const doubleSlash = `${slash}${slash}`;
-        var regx = `/${doubleSlash}/g`;
-        this.markup.replace(regx, `${slash}`)
-         
-
-    }
-
-       //function to format the markup
-       formatMarkup1() {
-
-        var dict = {
-          '\u005C\u005C': '\u005C',
-          '\n': '\r'
-        }
-        str.replace(/[\u005C\n]/g, (char) => dict[char] || '');
-      }
-    
     //function to generate the HTML template
     genHtmltemplate() {
+
+      return new Promise ((resolve, reject) => {
         //read the HTML template file
         fs.readFile(config.INPUTHTML, (err, fileString)=> {
           if (err) {
-              throw "Error reading template.html";
+              reject ("Error reading file " + config.INPUTHTML)
           }
           //parse the html
           const $ = cheerio.load(fileString)
-          $('body').append(this.markup)
+          $('body').append(this.finalMarkup)
 
           //create a main html file
-          fs.writeFile(config.OUTPUTHTML, $.html(), function (err) {
+          fs.writeFile(config.OUTPUTHTML, $.html(),  (err) => {
             if (err) {
-                throw "Error creating index.html";
+                reject ("Error creating file" + config.OUTPUTHTML)
             } 
-             
-            console.log("index.html file created");
-
-          });
+              resolve("Index.html created")
+          })
 
         })
+      })
     }
- 
-  };
+   }
 
 
 
