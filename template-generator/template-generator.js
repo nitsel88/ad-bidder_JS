@@ -1,19 +1,21 @@
 //Module with logic to generate html based on the markup string passed
-
 const cheerio = require('cheerio')
 const fs = require('fs')
-const config = require('./config')
+
+var OUTPUTHTML = 'public/index.html'
 
 class TemplateGenerator {
 
-    constructor(markup) {
-      this.markup = markup
+    constructor(htmlTemplate, markup) {
+      this.htmlTemplate = htmlTemplate
+      this.markupToAppend = markup
+      //format the markup
       this.formatMarkup()
     }
 
    //function to format the markup
     formatMarkup() {
-       this.finalMarkup  = this.markup.replace(/\\n/g,"\\r")
+       this.finalMarkup  = this.markupToAppend.replace(/\\n/g,"\\r")
      }
 
     //function to generate the HTML template
@@ -21,27 +23,27 @@ class TemplateGenerator {
 
       return new Promise ((resolve, reject) => {
         //read the HTML template file
-        fs.readFile(config.INPUTHTML, (err, fileString)=> {
+        fs.readFile(this.htmlTemplate, (err, fileString)=> {
+
           if (err) {
-              reject ("Error reading file " + config.INPUTHTML)
-          }
+             return reject ("Error reading file " + this.htmlTemplate)
+          } 
+
           //parse the html
           const $ = cheerio.load(fileString)
           $('body').append(this.finalMarkup)
 
           //create a main html file
-          fs.writeFile(config.OUTPUTHTML, $.html(),  (err) => {
+          fs.writeFile(OUTPUTHTML, $.html(),  (err) => {
             if (err) {
-                reject ("Error creating file" + config.OUTPUTHTML)
+                return reject ("Error creating file" + OUTPUTHTML)
             } 
-              resolve("Index.html created")
+              return resolve( OUTPUTHTML + " - created")
           })
-
         })
       })
     }
    }
-
 
 
   module.exports = TemplateGenerator;
