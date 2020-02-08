@@ -12,7 +12,7 @@ async function run() {
 
       //getting the object for selected bid from bid Manager
   let bidManager = new BidManager(bidsObject);
-  let selectedBidObj = bidManager.getSelectedBidder()
+  let selectedBidObj = bidManager.getSelectedBidder().catch((err) => {return (err)})
 
      //generate the final HTML template after doing the formating 
   let tempGenObj = new TempGenerator(config.INPUTHTML, selectedBidObj.bid[0].adm); 
