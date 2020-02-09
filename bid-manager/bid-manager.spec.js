@@ -17,7 +17,7 @@ describe('bid-manager', function() {
 
     it('should return a bidder object having maximum price', function() {
       let bidManager = new BidManager(mockResponse)
-       return expect(bidManager.getSelectedBidder()).to.eventually.be.an('array').that.contains.property('bid').property('price', '5.01089295');
+       return expect(bidManager.getSelectedBidder()).to.eventually.have.nested.property("bid[0].price", 5.01089295)
     });
   });
 });
